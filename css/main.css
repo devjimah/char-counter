@@ -1,0 +1,516 @@
+/* importing fonts from assets folder */
+@font-face {
+  font-family: "DM Sans";
+  src: url("../assets/fonts/DM_Sans/static/DMSans-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("../assets/fonts/DM_Sans/static/DMSans-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "DM Sans";
+  src: url("../assets/fonts/DM_Sans/static/DMSans-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+}
+/* declaration of CSS variables for light and dark themes */
+:root {
+  --bg-color: #f5f5f5;
+  --text-color: #333;
+  --border-color: #e0e0e0;
+  --primary-color: #ba56f9;
+  --stats-font-color: #000000;
+  --stat-purple: #d3a0fa;
+  --stat-orange: #ff9f00;
+  --stat-coral: #fe8159;
+  --stat-image-scale: 1.4;
+  --stat-image-offset: 4rem;
+  --toggle-bg: #e5e2e2;
+  --checkbox-bg: #ffffff;
+  --bg-image: url("../assets/images/bg-light-theme.png");
+  --logo-image: url("../assets/images/logo-light-theme.svg");
+  --theme-icon: url("../assets/images/icon-moon.svg");
+}
+
+/* dark theme styles - triggered by checkbox */
+#theme-toggle:checked ~ * {
+  --bg-color: #1a1a2e;
+  --text-color: #fff;
+  --border-color: #a6a6c8;
+  --stats-font-color: #000;
+  --toggle-bg: #2d2d44;
+  --checkbox-bg: #2d2d44;
+  color: var(--text-color);
+  background-image: url("../assets/images/bg-dark-theme.png");
+}
+
+#theme-toggle:checked ~ header .logo img {
+  content: url("../assets/images/logo-dark-theme.svg");
+}
+#theme-toggle:checked ~ header .theme-toggler img {
+  content: url("../assets/images/icon-sun.svg");
+}
+
+/* Universal styles for all elements */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Body and layout styles */
+body {
+  font-family: "DM Sans", sans-serif;
+  background-color: var(--bg-color);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: var(--text-color);
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* Main container and header styles */
+.main-container {
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+nav {
+  padding: 2rem 0.5rem;
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Character counter title styles */
+.character-counter {
+  border-radius: 16px;
+}
+.character-counter h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+/* Logo styles */
+.logo img {
+  height: 2.5rem;
+  width: auto;
+}
+
+/* Theme toggler styles */
+.theme-toggler {
+  background-color: var(--toggle-bg);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  transition: transform 0.2s ease;
+}
+.theme-toggler:hover {
+  transform: scale(1.05);
+}
+.theme-toggler img {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+/* Wrapper styles */
+.wrapper {
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* Checkbox styles */
+.checkboxes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin: 1rem auto;
+}
+
+.char-limit-warning {
+  min-height: 1.5rem;
+  color: #fe8159;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.25rem 0;
+}
+
+.options {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  position: relative;
+  user-select: none;
+}
+.checkbox-label input[type=checkbox] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+.checkbox-label input[type=checkbox]:checked ~ .checkmark {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.checkbox-label input[type=checkbox]:checked ~ .checkmark:after {
+  display: block;
+}
+.checkbox-label input[type=checkbox]:focus ~ .checkmark {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+.checkbox-label .checkmark {
+  position: relative;
+  height: 1.125rem;
+  width: 1.125rem;
+  background-color: var(--checkbox-bg);
+  border: 2px solid var(--border-color);
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.checkbox-label .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 0.3rem;
+  top: 0.05rem;
+  width: 0.3rem;
+  height: 0.6rem;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.checkbox-label:hover .checkmark {
+  border-color: var(--primary-color);
+}
+
+/* Options container styles */
+.options {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.limit-input {
+  width: 50px;
+  padding: 0.3rem 0.4rem;
+  border: 2px solid var(--border-color);
+  border-radius: 6px;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  text-align: center;
+  transition: border-color 0.3s ease, opacity 0.3s ease;
+}
+.limit-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+}
+.limit-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.limit-input::placeholder {
+  color: var(--text-color);
+  opacity: 0.5;
+}
+.limit-input {
+  /* Remove spinner arrows */
+}
+.limit-input::-webkit-inner-spin-button, .limit-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.limit-input {
+  -moz-appearance: textfield;
+}
+
+/* Text input area styles */
+#text-input {
+  width: 100%;
+  min-height: 200px;
+  background-color: var(--bg-color);
+  padding: 1rem;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  font-family: "DM Sans", sans-serif;
+  font-size: 1rem;
+  color: var(--text-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+#text-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 2px 2px 2px 2px rgba(186, 86, 249, 0.2);
+}
+#text-input:focus-visible {
+  border-color: var(--primary-color);
+}
+
+.stats {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.stat-item {
+  height: auto;
+  display: flex;
+  align-items: center;
+  border-radius: 8px;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.stat-item img {
+  width: 9.4rem;
+  height: 150px;
+  transform: scale(var(--stat-image-scale));
+  margin-left: var(--stat-image-offset);
+}
+.stat-item:nth-child(1) {
+  background-color: var(--stat-purple);
+}
+.stat-item:nth-child(2) {
+  background-color: var(--stat-orange);
+}
+.stat-item:nth-child(3) {
+  background-color: var(--stat-coral);
+}
+
+.stat-content {
+  display: flex;
+  flex-direction: column;
+  padding: 0 1rem;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--stats-font-color);
+  margin-bottom: 0.25rem;
+}
+
+.stat-value {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  color: var(--stats-font-color);
+}
+
+.count-container {
+  margin-top: 2rem;
+}
+.count-container h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+#letter-density-message {
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+textarea {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.count-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  width: 100%;
+  gap: 1rem;
+}
+
+.letter-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-color);
+  min-width: 1.5rem;
+  text-align: left;
+}
+
+.progress-bar {
+  flex: 1;
+  height: 10px;
+  background-color: var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: var(--primary-color);
+  transition: width 0.3s ease;
+  border-radius: 8px;
+}
+
+.letter-percentage {
+  font-size: 0.9rem;
+  color: var(--text-color);
+  min-width: 90px;
+  text-align: right;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.see-more {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+  padding: 0;
+  background: transparent;
+  color: var(--text-color);
+  border: none;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 400;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+.see-more:hover {
+  color: var(--primary-color);
+}
+.see-more:hover .arrow {
+  color: var(--primary-color);
+}
+.see-more:focus {
+  outline: none;
+}
+.see-more:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.see-more .arrow {
+  display: inline-block;
+  font-size: 1.2rem;
+  transition: transform 0.3s ease, color 0.3s ease;
+  transform: rotate(90deg);
+}
+.see-more.expanded .arrow {
+  transform: rotate(-90deg);
+}
+
+/* Responsive styles for different screen sizes */
+@media (max-width: 1024px) {
+  .stat-item img {
+    width: 120px;
+    height: 120px;
+    margin-left: 2rem;
+  }
+  .stat-value {
+    font-size: 3.5rem;
+  }
+}
+@media (max-width: 768px) {
+  .character-counter h1 {
+    font-size: 2rem;
+  }
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  .stat-item img {
+    width: 100px;
+    height: 100px;
+    margin-left: 1rem;
+  }
+  .stat-value {
+    font-size: 2.5rem;
+  }
+  .checkboxes {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .letter-percentage {
+    font-size: 0.85rem;
+    min-width: 80px;
+  }
+  .letter-label {
+    min-width: 1.2rem;
+    font-size: 0.9rem;
+  }
+  .progress-bar {
+    max-width: 50%;
+  }
+}
+@media (max-width: 480px) {
+  .character-counter h1 {
+    font-size: 1.5rem;
+  }
+  .stats {
+    grid-template-columns: 1fr;
+  }
+  .stat-value {
+    font-size: 2rem;
+  }
+  .options {
+    flex-direction: column;
+  }
+  .count-bar {
+    gap: 0.25rem;
+    flex-wrap: nowrap;
+  }
+  .letter-label {
+    font-size: 0.75rem;
+    min-width: 1rem;
+  }
+  .progress-bar {
+    max-width: 70%;
+    height: 8px;
+  }
+  .letter-percentage {
+    font-size: 0.7rem;
+    min-width: 55px;
+  }
+}
+
+/*# sourceMappingURL=main.css.map */
