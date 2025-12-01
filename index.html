@@ -78,29 +78,31 @@
               aria-live="polite"
               aria-atomic="true"
             ></div>
-            <div class="options">
-              <label for="exclude-space" class="checkbox-label">
-                <input type="checkbox" id="exclude-space" />
-                <span class="checkmark"></span>
-                Exclude Spaces
-              </label>
-              <label for="character-limit" class="checkbox-label">
-                <input type="checkbox" id="character-limit" />
-                <span class="checkmark"></span>
-                Set Character Limit
-              </label>
-              <input
-                type="number"
-                id="limit-input"
-                class="limit-input"
-                placeholder="300"
-                min="1"
-                max="5000"
-                disabled
-              />
-            </div>
-            <div class="reading-time" aria-live="polite">
-              <p>Approx. reading time: 0 minute</p>
+            <div class="options-row">
+              <div class="options">
+                <label for="exclude-space" class="checkbox-label">
+                  <input type="checkbox" id="exclude-space" />
+                  <span class="checkmark"></span>
+                  Exclude Spaces
+                </label>
+                <label for="character-limit" class="checkbox-label">
+                  <input type="checkbox" id="character-limit" />
+                  <span class="checkmark"></span>
+                  Set Character Limit
+                </label>
+                <input
+                  type="number"
+                  id="limit-input"
+                  class="limit-input"
+                  placeholder="300"
+                  min="1"
+                  max="300"
+                  disabled
+                />
+              </div>
+              <div class="reading-time" aria-live="polite">
+                <p>Approx. reading time: 0 minute</p>
+              </div>
             </div>
           </div>
         </div>

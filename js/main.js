@@ -301,9 +301,16 @@ document.addEventListener("DOMContentLoaded", function () {
   // Enable/disable limit input based on checkbox
   limitCheckbox.addEventListener("change", function () {
     limitInput.disabled = !limitCheckbox.checked;
-    if (limitCheckbox.checked && !limitInput.value) {
-      limitInput.value = DEFAULT_LIMIT;
+
+    if (limitCheckbox.checked) {
+      limitInput.classList.add("active");
+      if (!limitInput.value) {
+        limitInput.value = DEFAULT_LIMIT;
+      }
+    } else {
+      limitInput.classList.remove("active");
     }
+
     updateEverything();
   });
 
