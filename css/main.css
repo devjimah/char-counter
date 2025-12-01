@@ -1,16 +1,14 @@
 /* importing fonts from assets folder */
 @font-face {
   font-family: "DM Sans";
-  src: url("../assets/fonts/DM_Sans/static/DMSans-Regular.ttf")
-    format("truetype");
+  src: url("../assets/fonts/DM_Sans/static/DMSans-Regular.ttf") format("truetype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 @font-face {
   font-family: "DM Sans";
-  src: url("../assets/fonts/DM_Sans/static/DMSans-SemiBold.ttf")
-    format("truetype");
+  src: url("../assets/fonts/DM_Sans/static/DMSans-SemiBold.ttf") format("truetype");
   font-weight: 600;
   font-style: normal;
   font-display: swap;
@@ -42,22 +40,20 @@
   --theme-icon: url("../assets/images/icon-moon.svg");
 }
 
-/* dark theme styles - triggered by checkbox */
-#theme-toggle:checked ~ * {
+/* dark theme styles - triggered by class on body */
+body.dark-theme {
   --bg-color: #1a1a2e;
   --text-color: #fff;
   --border-color: #a6a6c8;
   --stats-font-color: #000;
   --toggle-bg: #2d2d44;
   --checkbox-bg: #2d2d44;
-  color: var(--text-color);
   background-image: url("../assets/images/bg-dark-theme.png");
 }
-
-#theme-toggle:checked ~ header .logo img {
+body.dark-theme header .logo img {
   content: url("../assets/images/logo-dark-theme.svg");
 }
-#theme-toggle:checked ~ header .theme-toggler img {
+body.dark-theme header .theme-toggler img {
   content: url("../assets/images/icon-sun.svg");
 }
 
@@ -203,24 +199,24 @@ nav {
   font-size: 0.9rem;
   position: relative;
   -webkit-user-select: none;
-  -moz-user-select: none;
-  user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
-.checkbox-label input[type="checkbox"] {
+.checkbox-label input[type=checkbox] {
   position: absolute;
   opacity: 0;
   cursor: pointer;
   height: 0;
   width: 0;
 }
-.checkbox-label input[type="checkbox"]:checked ~ .checkmark {
+.checkbox-label input[type=checkbox]:checked ~ .checkmark {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
 }
-.checkbox-label input[type="checkbox"]:checked ~ .checkmark:after {
+.checkbox-label input[type=checkbox]:checked ~ .checkmark:after {
   display: block;
 }
-.checkbox-label input[type="checkbox"]:focus ~ .checkmark {
+.checkbox-label input[type=checkbox]:focus ~ .checkmark {
   outline: 2px solid var(--primary-color);
   outline-offset: 2px;
 }
@@ -263,8 +259,8 @@ nav {
   transition: border-color 0.3s ease, opacity 0.3s ease;
   /* Remove spinner arrows */
   -webkit-appearance: textfield;
-  -moz-appearance: textfield;
-  appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
 }
 .limit-input.active {
   display: block;
@@ -285,8 +281,7 @@ nav {
   color: var(--text-color);
   opacity: 0.5;
 }
-.limit-input::-webkit-inner-spin-button,
-.limit-input::-webkit-outer-spin-button {
+.limit-input::-webkit-inner-spin-button, .limit-input::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
@@ -553,4 +548,4 @@ textarea {
     font-size: 0.7rem;
     min-width: 55px;
   }
-} /*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main.css.map */

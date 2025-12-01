@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", function () {
         this.limitInput.disabled = !this.limitCheckbox.checked;
         this.limitInput.classList.toggle("active", this.limitCheckbox.checked);
         if (this.limitCheckbox.checked && !this.limitInput.value) {
-          this.limitInput.value = this.defaultLimit;
+          this.limitInput.value = 300;
         }
         this.update();
       });
@@ -115,62 +115,31 @@ document.addEventListener("DOMContentLoaded", function () {
     updateCharCount(text) {
       let count = text.length;
 
-      // If excluding spaces, count only non-space characters
+      // If excluding spaces, remove all whitespace and count
       if (this.excludeSpaces.checked) {
-        count = 0;
-        for (let i = 0; i < text.length; i++) {
-          if (text[i] !== " " && text[i] !== "\n" && text[i] !== "\t") {
-            count++;
-          }
-        }
+        count = text.replace(/\s/g, "").length;
       }
 
       this.charCount.textContent = count < 10 ? "0" + count : count;
     }
 
     updateWordCount(text) {
-      let count = 0;
-      const trimmed = text.trim();
-
-      if (trimmed.length > 0) {
-        let inWord = false;
-        for (let i = 0; i < trimmed.length; i++) {
-          const isSpace =
-            trimmed[i] === " " || trimmed[i] === "\n" || trimmed[i] === "\t";
-          if (!isSpace && !inWord) {
-            count++;
-            inWord = true;
-          } else if (isSpace) {
-            inWord = false;
-          }
-        }
-      }
+      // Split by whitespace to get words
+      const words = text.trim().split(/\s+/);
+      // If text is empty, count is 0, otherwise it's the array length
+      const count = text.trim() === "" ? 0 : words.length;
 
       this.wordCount.textContent = count < 10 ? "0" + count : count;
       return count; // Return for reading time
     }
 
     updateSentenceCount(text) {
-      let count = 0;
+      const cleanText = text.replace(/(Mr|Mrs|Ms|Dr|Prof|Sr|Jr)\./gi, "$1");
 
-      for (let i = 0; i < text.length; i++) {
-        const char = text[i];
-        const next = text[i + 1];
-        const prev = text[i - 1];
-
-        // Check for sentence endings: . ! ?
-        if (char === "." || char === "!" || char === "?") {
-          // Skip decimals like 3.14
-          if (prev >= "0" && prev <= "9" && next >= "0" && next <= "9") {
-            continue;
-          }
-          // Skip multiple dots ...
-          if (char === "." && next === ".") {
-            continue;
-          }
-          count++;
-        }
-      }
+      const sentences = cleanText
+        .split(/[.!?]+/)
+        .filter((s) => s.trim().length > 0);
+      const count = sentences.length;
 
       this.sentenceCount.textContent = count < 10 ? "0" + count : count;
     }
@@ -271,10 +240,8 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
 
-      const limit = Math.min(
-        parseInt(this.limitInput.value) || this.defaultLimit,
-        this.maxChars
-      );
+      // Enforce limit from input or default to 300
+      const limit = parseInt(this.limitInput.value) || 300;
       this.textarea.maxLength = limit;
 
       if (text.length >= limit) {

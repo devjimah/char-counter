@@ -45,25 +45,24 @@
   --theme-icon: url("../assets/images/icon-moon.svg");
 }
 
-/* dark theme styles - triggered by checkbox */
-#theme-toggle:checked ~ * {
+/* dark theme styles - triggered by class on body */
+body.dark-theme {
   --bg-color: #1a1a2e;
   --text-color: #fff;
   --border-color: #a6a6c8;
   --stats-font-color: #000;
   --toggle-bg: #2d2d44;
   --checkbox-bg: #2d2d44;
-  color: var(--text-color);
   background-image: url("../assets/images/bg-dark-theme.png");
-}
 
-#theme-toggle:checked ~ header {
-  .logo img {
-    content: url("../assets/images/logo-dark-theme.svg");
-  }
+  header {
+    .logo img {
+      content: url("../assets/images/logo-dark-theme.svg");
+    }
 
-  .theme-toggler img {
-    content: url("../assets/images/icon-sun.svg");
+    .theme-toggler img {
+      content: url("../assets/images/icon-sun.svg");
+    }
   }
 }
 
@@ -72,8 +71,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: background-color 0.3s ease, color 0.3s ease,
-    border-color 0.3s ease;
 }
 
 /* Screen reader only content */
