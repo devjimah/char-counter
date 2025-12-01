@@ -1,315 +1,263 @@
-// Wait for the page to fully load before running the code
+// Wait for page to load
 document.addEventListener("DOMContentLoaded", function () {
-  // THEME SWITCHING FUNCTION
+  // ========== THEME MANAGER ==========
+  class ThemeManager {
+    constructor() {
+      this.toggle = document.getElementById("theme-toggle");
+      this.logo = document.getElementById("logo-img");
+      this.icon = document.querySelector(".theme-icon");
 
-  function setupThemeToggle() {
-    // Get the theme toggle checkbox
-    const themeToggle = document.getElementById("theme-toggle");
-    const logoImg = document.getElementById("logo-img");
-    const themeIcon = document.querySelector(".theme-icon");
+      this.loadSavedTheme();
+      this.toggle.addEventListener("change", () => this.switchTheme());
+    }
 
-    // Check if user has a saved theme preference
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
+    loadSavedTheme() {
+      if (localStorage.getItem("theme") === "dark") {
+        this.setDark();
+      }
+    }
+
+    switchTheme() {
+      if (this.toggle.checked) {
+        this.setDark();
+      } else {
+        this.setLight();
+      }
+    }
+
+    setDark() {
       document.body.classList.add("dark-theme");
-      themeToggle.checked = true;
-      updateThemeAssets(true);
+      this.toggle.checked = true;
+      this.logo.src = "./assets/images/logo-dark-theme.svg";
+      this.icon.src = "./assets/images/icon-sun.svg";
+      localStorage.setItem("theme", "dark");
     }
 
-    // Listen for theme toggle changes
-    themeToggle.addEventListener("change", function () {
-      if (themeToggle.checked) {
-        // Switch to dark theme
-        document.body.classList.add("dark-theme");
-        localStorage.setItem("theme", "dark");
-        updateThemeAssets(true);
-      } else {
-        // Switch to light theme
-        document.body.classList.remove("dark-theme");
-        localStorage.setItem("theme", "light");
-        updateThemeAssets(false);
-      }
-    });
-
-    // Helper function to update logo and icon
-    function updateThemeAssets(isDark) {
-      if (isDark) {
-        // Dark theme assets
-        logoImg.src = "./assets/images/logo-dark-theme.svg";
-        themeIcon.src = "./assets/images/icon-sun.svg";
-      } else {
-        // Light theme assets
-        logoImg.src = "./assets/images/logo-light-theme.svg";
-        themeIcon.src = "./assets/images/icon-moon.svg";
-      }
+    setLight() {
+      document.body.classList.remove("dark-theme");
+      this.toggle.checked = false;
+      this.logo.src = "./assets/images/logo-light-theme.svg";
+      this.icon.src = "./assets/images/icon-moon.svg";
+      localStorage.setItem("theme", "light");
     }
   }
 
-  setupThemeToggle();
+  // ========== CHARACTER COUNTER ==========
+  class CharacterCounter {
+    constructor() {
+      // Settings
+      this.maxChars = 5000;
+      this.defaultLimit = 300;
+      this.wordsPerMinute = 200;
+      this.showAllLetters = false;
+      this.updateTimer = null;
 
-  // The textarea where users type
-  const textInput = document.getElementById("text-input");
+      // Get elements
+      this.textarea = document.getElementById("text-input");
+      this.charCount = document.getElementById("char-count");
+      this.wordCount = document.getElementById("word-count");
+      this.sentenceCount = document.getElementById("sentence-count");
+      this.readingTime = document.querySelector(".reading-time p");
+      this.excludeSpaces = document.getElementById("exclude-space");
+      this.limitCheckbox = document.getElementById("character-limit");
+      this.limitInput = document.getElementById("limit-input");
+      this.densityMessage = document.getElementById("letter-density-message");
+      this.barHolder = document.getElementById("bar-holder");
+      this.seeMoreBtn = document.getElementById("see-more-btn");
+      this.warning = document.getElementById("char-limit-warning");
 
-  // The number displays
-  const charCountDisplay = document.getElementById("char-count");
-  const wordCountDisplay = document.getElementById("word-count");
-  const sentenceCountDisplay = document.getElementById("sentence-count");
-  const readingTimeDisplay = document.querySelector(".reading-time p");
+      // Set up events and run initial update
+      this.setupEvents();
+      this.update();
+    }
 
-  // The checkboxes
-  const excludeSpaceCheckbox = document.getElementById("exclude-space");
-  const limitCheckbox = document.getElementById("character-limit");
-  const limitInput = document.getElementById("limit-input");
+    setupEvents() {
+      // When user types (with small delay for performance)
+      this.textarea.addEventListener("input", () => {
+        clearTimeout(this.updateTimer);
+        this.updateTimer = setTimeout(() => this.update(), 200);
+      });
 
-  // Letter density section
-  const letterDensityMessage = document.getElementById(
-    "letter-density-message"
-  );
-  const barHolder = document.getElementById("bar-holder");
-  const seeMoreBtn = document.getElementById("see-more-btn");
+      // Checkbox changes
+      this.excludeSpaces.addEventListener("change", () => this.update());
 
-  // Accessibility: Character limit warning element
-  const charLimitWarning = document.getElementById("char-limit-warning");
-
-  // SETTINGS
-
-  const DEFAULT_LIMIT = 300; // Default character limit
-  const MAX_CHARACTERS = 300; // Maximum allowed characters
-  const READING_SPEED = 200; // Average words per minute
-  let showAllLetters = false; // Track if showing all letters or top 5
-
-  function updateEverything() {
-    // Get the text from the textarea
-    const text = textInput.value;
-
-    // --- COUNT CHARACTERS ---
-    let characterCount = text.length;
-
-    // If "Exclude Spaces" is checked, remove spaces before counting
-    if (excludeSpaceCheckbox.checked) {
-      let textWithoutSpaces = "";
-      for (let i = 0; i < text.length; i++) {
-        if (text[i] !== " " && text[i] !== "\n" && text[i] !== "\t") {
-          textWithoutSpaces += text[i];
+      this.limitCheckbox.addEventListener("change", () => {
+        this.limitInput.disabled = !this.limitCheckbox.checked;
+        this.limitInput.classList.toggle("active", this.limitCheckbox.checked);
+        if (this.limitCheckbox.checked && !this.limitInput.value) {
+          this.limitInput.value = 300;
         }
-      }
-      characterCount = textWithoutSpaces.length;
-    }
+        this.update();
+      });
 
-    // Show the character count (with leading zero if needed)
-    charCountDisplay.textContent =
-      characterCount < 10 ? `0${characterCount}` : characterCount;
+      this.limitInput.addEventListener("input", () => this.update());
 
-    // --- COUNT WORDS ---
-    let wordCount = 0;
-
-    if (text.trim().length > 0) {
-      // Split by whitespace and filter out empty strings
-      wordCount = text
-        .trim()
-        .split(/\s+/)
-        .filter((word) => word.length > 0).length;
-    }
-
-    // Show the word count
-    wordCountDisplay.textContent = wordCount < 10 ? `0${wordCount}` : wordCount;
-
-    // --- COUNT SENTENCES ---
-    let sentenceCount = 0;
-
-    // Count periods, exclamation marks, and question marks
-    for (let i = 0; i < text.length; i++) {
-      if (text[i] === "." || text[i] === "!" || text[i] === "?") {
-        sentenceCount++;
-      }
-    }
-
-    // Show the sentence count
-    sentenceCountDisplay.textContent =
-      sentenceCount < 10 ? `0${sentenceCount}` : sentenceCount;
-
-    // --- CALCULATE READING TIME ---
-    let readingTime = "0 minutes";
-
-    if (wordCount > 0) {
-      const minutes = Math.ceil(wordCount / READING_SPEED);
-
-      if (minutes < 1) {
-        readingTime = "< 1 minute";
-      } else if (minutes === 1) {
-        readingTime = "1 minute";
-      } else {
-        readingTime = `~${minutes} minutes`;
-      }
-    }
-
-    readingTimeDisplay.textContent = `Approx. reading time: ${readingTime}`;
-
-    // --- UPDATE LETTER DENSITY ---
-    updateLetterDensity(text);
-
-    // --- CHECK CHARACTER LIMIT ---
-    checkCharacterLimit(text.length);
-  }
-
-  function updateLetterDensity(text) {
-    // Count how many times each letter appears
-    const letterCounts = {};
-    let totalLetters = 0;
-
-    // Go through each character
-    for (let i = 0; i < text.length; i++) {
-      const char = text[i].toUpperCase();
-
-      // Only count letters A-Z
-      if (char >= "A" && char <= "Z") {
-        if (letterCounts[char]) {
-          letterCounts[char]++;
-        } else {
-          letterCounts[char] = 1;
-        }
-        totalLetters++;
-      }
-    }
-
-    // If no letters, show the message
-    if (totalLetters === 0) {
-      letterDensityMessage.style.display = "block";
-      barHolder.style.display = "none";
-      seeMoreBtn.style.display = "none";
-      return;
-    }
-
-    // Hide message and show bars
-    letterDensityMessage.style.display = "none";
-    barHolder.style.display = "block";
-
-    // Find the top letters sorted by frequency
-    const letterArray = [];
-    for (const letter in letterCounts) {
-      letterArray.push({
-        letter: letter,
-        count: letterCounts[letter],
+      // See more button
+      this.seeMoreBtn.addEventListener("click", () => {
+        this.showAllLetters = !this.showAllLetters;
+        this.updateLetterDensity();
       });
     }
 
-    // Sort by count (highest first)
-    letterArray.sort(function (a, b) {
-      return b.count - a.count;
-    });
+    update() {
+      const text = this.textarea.value;
 
-    // Determine how many to show
-    const lettersToShow = showAllLetters
-      ? letterArray
-      : letterArray.slice(0, 5);
+      this.updateCharCount(text);
+      const wordCount = this.updateWordCount(text);
+      this.updateSentenceCount(text);
+      this.updateReadingTime(wordCount);
+      this.updateLetterDensity();
+      this.checkLimit(text);
+    }
 
-    // Show/hide "see more" button
-    if (letterArray.length > 5) {
-      seeMoreBtn.style.display = "flex";
-      const btnText = seeMoreBtn.querySelector("span:first-child");
-      btnText.textContent = showAllLetters ? "see less" : "see more";
+    // ===== COUNTING METHODS =====
 
-      if (showAllLetters) {
-        seeMoreBtn.classList.add("expanded");
+    updateCharCount(text) {
+      let count = text.length;
+
+      // If excluding spaces, remove all whitespace and count
+      if (this.excludeSpaces.checked) {
+        count = text.replace(/\s/g, "").length;
+      }
+
+      this.charCount.textContent = count < 10 ? "0" + count : count;
+    }
+
+    updateWordCount(text) {
+      // Split by whitespace to get words
+      const words = text.trim().split(/\s+/);
+      // If text is empty, count is 0, otherwise it's the array length
+      const count = text.trim() === "" ? 0 : words.length;
+
+      this.wordCount.textContent = count < 10 ? "0" + count : count;
+      return count; // Return for reading time
+    }
+
+    updateSentenceCount(text) {
+      const cleanText = text.replace(/(Mr|Mrs|Ms|Dr|Prof|Sr|Jr)\./gi, "$1");
+
+      const sentences = cleanText
+        .split(/[.!?]+/)
+        .filter((s) => s.trim().length > 0);
+      const count = sentences.length;
+
+      this.sentenceCount.textContent = count < 10 ? "0" + count : count;
+    }
+
+    updateReadingTime(wordCount) {
+      let time = "0 minutes";
+
+      if (wordCount > 0) {
+        const minutes = Math.ceil(wordCount / this.wordsPerMinute);
+        if (minutes === 1) {
+          time = "1 minute";
+        } else {
+          time = "~" + minutes + " minutes";
+        }
+      }
+
+      this.readingTime.textContent = "Approx. reading time: " + time;
+    }
+
+    updateLetterDensity() {
+      const text = this.textarea.value;
+
+      // Count each letter
+      const counts = {};
+      let total = 0;
+
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i].toUpperCase();
+        if (char >= "A" && char <= "Z") {
+          counts[char] = (counts[char] || 0) + 1;
+          total++;
+        }
+      }
+
+      // No letters? Show message
+      if (total === 0) {
+        this.densityMessage.style.display = "block";
+        this.barHolder.style.display = "none";
+        this.seeMoreBtn.style.display = "none";
+        return;
+      }
+
+      this.densityMessage.style.display = "none";
+      this.barHolder.style.display = "block";
+
+      // Convert to array and sort
+      const letters = [];
+      for (const letter in counts) {
+        letters.push({ letter: letter, count: counts[letter] });
+      }
+      letters.sort((a, b) => b.count - a.count);
+
+      // Show top 5 or all
+      const toShow = this.showAllLetters ? letters : letters.slice(0, 5);
+
+      // Update button
+      if (letters.length > 5) {
+        this.seeMoreBtn.style.display = "flex";
+        this.seeMoreBtn.querySelector("span").textContent = this.showAllLetters
+          ? "see less"
+          : "see more";
+        this.seeMoreBtn.classList.toggle("expanded", this.showAllLetters);
       } else {
-        seeMoreBtn.classList.remove("expanded");
+        this.seeMoreBtn.style.display = "none";
       }
-    } else {
-      seeMoreBtn.style.display = "none";
+
+      // Build bars
+      this.barHolder.innerHTML = "";
+      for (let i = 0; i < toShow.length; i++) {
+        const pct = ((toShow[i].count / total) * 100).toFixed(2);
+        const bar = document.createElement("div");
+        bar.className = "count-bar";
+        bar.innerHTML =
+          '<p class="letter-label">' +
+          toShow[i].letter +
+          "</p>" +
+          '<div class="progress-bar">' +
+          '<div class="progress-fill" style="width:' +
+          pct +
+          '%"></div>' +
+          "</div>" +
+          '<p class="letter-percentage">' +
+          toShow[i].count +
+          " (" +
+          pct +
+          "%)</p>";
+        this.barHolder.appendChild(bar);
+      }
     }
 
-    // Clear old bars
-    barHolder.innerHTML = "";
+    checkLimit(text) {
+      // No limit enabled? Clear warnings
+      if (!this.limitCheckbox.checked) {
+        this.textarea.style.borderColor = "";
+        this.textarea.style.boxShadow = "";
+        this.warning.textContent = "";
+        this.textarea.maxLength = this.maxChars;
+        return;
+      }
 
-    // Create new bars
-    for (let i = 0; i < lettersToShow.length; i++) {
-      const letter = lettersToShow[i].letter;
-      const count = lettersToShow[i].count;
-      const percentage = ((count / totalLetters) * 100).toFixed(2);
+      // Enforce limit from input or default to 300
+      const limit = parseInt(this.limitInput.value) || 300;
+      this.textarea.maxLength = limit;
 
-      // Create the bar HTML
-      const barDiv = document.createElement("div");
-      barDiv.className = "count-bar";
-      barDiv.innerHTML = `
-        <p class="letter-label">${letter}</p>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: ${percentage}%"></div>
-        </div>
-        <p class="letter-percentage">${count} (${percentage}%)</p>
-      `;
-
-      barHolder.appendChild(barDiv);
+      if (text.length >= limit) {
+        this.textarea.style.borderColor = "#FE8159";
+        this.textarea.style.boxShadow = "0 0 8px rgba(254, 129, 89, 0.5)";
+        this.warning.textContent =
+          "Limit reached! Your text exceeds " + limit + " characters.";
+      } else {
+        this.textarea.style.borderColor = "";
+        this.textarea.style.boxShadow = "";
+        this.warning.textContent = "";
+      }
     }
   }
 
-  function checkCharacterLimit(currentLength) {
-    // Only show warnings if the limit checkbox is checked
-    if (!limitCheckbox.checked) {
-      textInput.style.borderColor = "";
-      textInput.style.boxShadow = "";
-      charLimitWarning.textContent = "";
-      textInput.maxLength = MAX_CHARACTERS;
-      return;
-    }
-
-    // Get custom limit or use default
-    const customLimit = parseInt(limitInput.value) || DEFAULT_LIMIT;
-    const actualLimit = Math.min(customLimit, MAX_CHARACTERS);
-    textInput.maxLength = actualLimit;
-
-    const remaining = actualLimit - currentLength;
-
-    // At or over the limit - RED warning
-    if (remaining <= 0) {
-      textInput.style.borderColor = "#FE8159";
-      textInput.style.boxShadow = "0 0 8px rgba(254, 129, 89, 0.5)";
-      charLimitWarning.textContent = `ⓘ Limit reached! Your text exceeds ${actualLimit} characters.`;
-    }
-    // Plenty of space left - normal
-    else {
-      textInput.style.borderColor = "";
-      textInput.style.boxShadow = "";
-      charLimitWarning.textContent = "";
-    }
-  }
-
-  // EVENT LISTENERS
-
-  // Enable/disable limit input based on checkbox
-  limitCheckbox.addEventListener("change", function () {
-    limitInput.disabled = !limitCheckbox.checked;
-
-    if (limitCheckbox.checked) {
-      limitInput.classList.add("active");
-      if (!limitInput.value) {
-        limitInput.value = DEFAULT_LIMIT;
-      }
-    } else {
-      limitInput.classList.remove("active");
-    }
-
-    updateEverything();
-  });
-
-  // Update when limit input changes
-  limitInput.addEventListener("input", function () {
-    if (limitCheckbox.checked) {
-      updateEverything();
-    }
-  });
-
-  // Update when user types
-  textInput.addEventListener("input", updateEverything);
-
-  // Update when checkboxes change
-  excludeSpaceCheckbox.addEventListener("change", updateEverything);
-
-  // "See more" button toggle
-  seeMoreBtn.addEventListener("click", function () {
-    showAllLetters = !showAllLetters;
-    updateEverything();
-  });
-
-  // Run once when page loads
-  updateEverything();
+  // ========== START THE APP ==========
+  new ThemeManager();
+  new CharacterCounter();
 });
