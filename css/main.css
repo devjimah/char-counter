@@ -199,7 +199,9 @@ nav {
   cursor: pointer;
   font-size: 0.9rem;
   position: relative;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 .checkbox-label input[type=checkbox] {
   position: absolute;
@@ -263,6 +265,10 @@ nav {
   font-size: 0.9rem;
   text-align: center;
   transition: border-color 0.3s ease, opacity 0.3s ease;
+  /* Remove spinner arrows */
+  -webkit-appearance: textfield;
+     -moz-appearance: textfield;
+          appearance: textfield;
 }
 .limit-input.active {
   display: block;
@@ -275,19 +281,17 @@ nav {
   opacity: 0.5;
   cursor: not-allowed;
 }
+.limit-input::-moz-placeholder {
+  color: var(--text-color);
+  opacity: 0.5;
+}
 .limit-input::placeholder {
   color: var(--text-color);
   opacity: 0.5;
 }
-.limit-input {
-  /* Remove spinner arrows */
-}
 .limit-input::-webkit-inner-spin-button, .limit-input::-webkit-outer-spin-button {
   -webkit-appearance: none;
   margin: 0;
-}
-.limit-input {
-  -moz-appearance: textfield;
 }
 
 /* Text input area styles */
@@ -552,6 +556,4 @@ textarea {
     font-size: 0.7rem;
     min-width: 55px;
   }
-}
-
-/*# sourceMappingURL=main.css.map */
+}/*# sourceMappingURL=main.css.map */

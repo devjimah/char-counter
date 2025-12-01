@@ -1,12 +1,6 @@
 // Wait for the page to fully load before running the code
 document.addEventListener("DOMContentLoaded", function () {
-  // ===================================
-  // GET ALL THE ELEMENTS WE NEED
-  // ===================================
-
-  // ===================================
   // THEME SWITCHING FUNCTION
-  // ===================================
 
   function setupThemeToggle() {
     // Get the theme toggle checkbox
@@ -51,7 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // Call this function when page loads (add inside DOMContentLoaded)
   setupThemeToggle();
 
   // The textarea where users type
@@ -78,18 +71,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // Accessibility: Character limit warning element
   const charLimitWarning = document.getElementById("char-limit-warning");
 
-  // ===================================
   // SETTINGS
-  // ===================================
 
   const DEFAULT_LIMIT = 300; // Default character limit
-  const MAX_CHARACTERS = 5000; // Maximum allowed characters
+  const MAX_CHARACTERS = 300; // Maximum allowed characters
   const READING_SPEED = 200; // Average words per minute
   let showAllLetters = false; // Track if showing all letters or top 5
-
-  // ===================================
-  // MAIN FUNCTION - UPDATES EVERYTHING
-  // ===================================
 
   function updateEverything() {
     // Get the text from the textarea
@@ -164,10 +151,6 @@ document.addEventListener("DOMContentLoaded", function () {
     // --- CHECK CHARACTER LIMIT ---
     checkCharacterLimit(text.length);
   }
-
-  // ===================================
-  // LETTER DENSITY FUNCTION
-  // ===================================
 
   function updateLetterDensity(text) {
     // Count how many times each letter appears
@@ -259,10 +242,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // ===================================
-  // CHARACTER LIMIT WARNING
-  // ===================================
-
   function checkCharacterLimit(currentLength) {
     // Only show warnings if the limit checkbox is checked
     if (!limitCheckbox.checked) {
@@ -294,9 +273,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // ===================================
   // EVENT LISTENERS
-  // ===================================
 
   // Enable/disable limit input based on checkbox
   limitCheckbox.addEventListener("change", function () {
