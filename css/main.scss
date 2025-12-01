@@ -22,6 +22,7 @@
   src: url("../assets/fonts/DM_Sans/static/DMSans-Bold.ttf") format("truetype");
   font-weight: 700;
   font-style: normal;
+  font-display: swap;
 }
 
 /* declaration of CSS variables for light and dark themes */
@@ -34,6 +35,7 @@
   --stat-purple: #d3a0fa;
   --stat-orange: #ff9f00;
   --stat-coral: #fe8159;
+  --bar-background: #21222c;
   --stat-image-scale: 1.4;
   --stat-image-offset: 4rem;
   --toggle-bg: #e5e2e2;
@@ -177,7 +179,7 @@ nav {
 
 .char-limit-warning {
   min-height: 1.5rem;
-  color: #fe8159;
+  color: var(--stat-coral);
   font-size: 0.9rem;
   font-weight: 500;
   padding: 0.25rem 0;
@@ -264,13 +266,6 @@ nav {
   &:hover .checkmark {
     border-color: var(--primary-color);
   }
-}
-
-/* Options container styles */
-.options {
-  display: flex;
-  gap: 1.5rem;
-  align-items: center;
 }
 
 .limit-input {
@@ -432,7 +427,7 @@ textarea {
 .progress-bar {
   flex: 1;
   height: 10px;
-  background-color: #21222c;
+  background-color: var(--bar-background);
   border-radius: 8px;
   overflow: hidden;
 }

@@ -20,7 +20,6 @@ A real-time character analysis tool that counts characters, words, sentences, an
 
 This is a responsive web application that provides real-time text analysis. Users can type or paste text to get instant statistics including character count, word count, sentence count, and detailed letter density analysis. The app features a beautiful UI with light/dark theme toggle.
 
-
 ## Features
 
 - **Real-time Character Counting** - Instant feedback as you type
@@ -38,7 +37,7 @@ This is a responsive web application that provides real-time text analysis. User
 - **HTML5** - Semantic markup
 - **SCSS/Sass** - CSS preprocessor with variables and nesting
 - **CSS3** - Modern styling with Grid, Flexbox, and CSS Variables
-- **JavaScript (ES6+)** - Real-time counting logic _(Coming soon)_
+- **JavaScript (ES6+)** - Real-time counting logic
 - **Google Fonts** - DM Sans font family
 - **Git** - Version control
 
@@ -160,14 +159,14 @@ starter-code/
 
 ## Future Enhancements
 
-- [ ] Add JavaScript functionality for real-time counting
-- [ ] Implement "See more" button to show extended letter density
-- [ ] Add reading time estimation
+- [x] Add JavaScript functionality for real-time counting
+- [x] Implement "See more" button to show extended letter density
+- [x] Add reading time estimation
+- [x] Theme preference persistence (localStorage)
 - [ ] Export statistics as PDF/CSV
 - [ ] Add text analysis (readability score, avg word length)
 - [ ] Implement copy-to-clipboard functionality
 - [ ] Add undo/redo functionality
-- [ ] Theme preference persistence (localStorage)
 - [ ] Multiple language support
 
 ### Code Style
