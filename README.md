@@ -15,14 +15,11 @@ A real-time character analysis tool that counts characters, words, sentences, an
 - [Design Specifications](#design-specifications)
 - [Browser Support](#browser-support)
 - [Future Enhancements](#future-enhancements)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Overview
 
 This is a responsive web application that provides real-time text analysis. Users can type or paste text to get instant statistics including character count, word count, sentence count, and detailed letter density analysis. The app features a beautiful UI with light/dark theme toggle.
 
-**Live Demo:** [View Demo](#) _(Add your deployment link)_
 
 ## Features
 
@@ -47,35 +44,31 @@ This is a responsive web application that provides real-time text analysis. User
 
 ## Project Structure
 
-```
 starter-code/
 ├── assets/
-│   ├── fonts/
-│   │   └── DM_Sans/
-│   │       └── static/
-│   │           ├── DMSans-Regular.ttf
-│   │           ├── DMSans-SemiBold.ttf
-│   │           └── DMSans-Bold.ttf
-│   └── images/
-│       ├── favicon-32x32.png
-│       ├── logo-light-theme.svg
-│       ├── logo-dark-theme.svg
-│       ├── icon-moon.svg
-│       ├── icon-sun.svg
-│       ├── bg-light-theme.png
-│       ├── bg-dark-theme.png
-│       └── illustration-*.svg
+│ ├── fonts/
+│ │ └── DM_Sans/
+│ │ └── static/
+│ │ ├── DMSans-Regular.ttf
+│ │ ├── DMSans-SemiBold.ttf
+│ │ └── DMSans-Bold.ttf
+│ └── images/
+│ ├── favicon-32x32.png
+│ ├── logo-light-theme.svg
+│ ├── logo-dark-theme.svg
+│ ├── icon-moon.svg
+│ ├── icon-sun.svg
+│ ├── bg-light-theme.png
+│ ├── bg-dark-theme.png
+│ └── illustration-\*.svg
 ├── css/
-│   ├── main.scss
-│   ├── main.css
-│   └── main.css.map
+│ ├── main.scss
+│ ├── main.css
+│ └── main.css.map
 ├── js/
-│   └── main.js (Coming soon)
-├── design/
-│   └── *.jpg (Design mockups)
+│ └── main.js
 ├── index.html
 └── README.md
-```
 
 ## Installation
 
@@ -88,29 +81,25 @@ starter-code/
 
 1. **Clone the repository**
 
-   ```bash
-   git clone https://github.com/yourusername/character-counter.git
+   bash
+   git clone https://github.com/devjimah/char-counter.git
    cd character-counter
-   ```
 
 2. **Install Sass (if not already installed)**
 
-   ```bash
+   bash
    npm install -g sass
-   ```
 
 3. **Compile SCSS to CSS**
 
-   ```bash
+   bash
    cd css
    sass main.scss main.css --watch
-   ```
 
 4. **Open in browser**
-   ```bash
+   bash
    # Simply open index.html in your browser
    # Or use a local server like Live Server in VS Code
-   ```
 
 ## Usage
 
