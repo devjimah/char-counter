@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
       this.icon = document.querySelector(".theme-icon");
 
       this.loadSavedTheme();
-      this.toggle.addEventListener("change", () => this.switchTheme());
+      this.toggle.addEventListener("click", () => this.switchTheme());
     }
 
     loadSavedTheme() {
@@ -18,16 +18,15 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     switchTheme() {
-      if (this.toggle.checked) {
-        this.setDark();
-      } else {
+      if (document.body.classList.contains("dark-theme")) {
         this.setLight();
+      } else {
+        this.setDark();
       }
     }
 
     setDark() {
       document.body.classList.add("dark-theme");
-      this.toggle.checked = true;
       this.logo.src = "./assets/images/logo-dark-theme.svg";
       this.icon.src = "./assets/images/icon-sun.svg";
       localStorage.setItem("theme", "dark");
@@ -35,7 +34,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     setLight() {
       document.body.classList.remove("dark-theme");
-      this.toggle.checked = false;
       this.logo.src = "./assets/images/logo-light-theme.svg";
       this.icon.src = "./assets/images/icon-moon.svg";
       localStorage.setItem("theme", "light");
